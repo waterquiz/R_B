@@ -44,7 +44,7 @@ echo "Starting openbox window manager..."
 openbox &
 sleep 1
 
-echo "Launching Chromium..."
+echo "Launching Chromium with Violentmonkey..."
 chromium-browser \
     --no-sandbox \
     --disable-dev-shm-usage \
@@ -59,8 +59,41 @@ chromium-browser \
     --window-position=0,0 \
     --test-type \
     --noerrdialogs \
+    --load-extension=/app/extensions/violentmonkey \
     https://www.google.com &
 sleep 5
+
+echo "Pinning Violentmonkey extension..."
+python3 -c "
+import json, os, time
+prefs_file = os.path.expanduser('~/.config/google-chrome/Default/Preferences')
+# Wait for preferences file to be created
+for i in range(10):
+    if os.path.exists(prefs_file):
+        try:
+            with open(prefs_file, 'r') as f:
+                prefs = json.load(f)
+            ext_settings = prefs.get('extensions', {}).get('settings', {})
+            modified = False
+            for ext_id, settings in ext_settings.items():
+                if ext_id and ext_id != '__MSG__':
+                    path = settings.get('path', '')
+                    if 'violentmonkey' in path.lower():
+                        settings['pin_to_toolbar'] = True
+                        settings['toolbar_pin'] = True
+                        print(f'Pinned extension: {ext_id}')
+                        modified = True
+            if modified:
+                with open(prefs_file, 'w') as f:
+                    json.dump(prefs, f, indent=2)
+                print('Extension pinned successfully')
+            else:
+                print('Extension not found in preferences yet')
+            break
+        except:
+            pass
+    time.sleep(1)
+" 2>/dev/null || true
 
 echo "Starting x11vnc..."
 if [ -n "$VNC_PASSWORD" ]; then

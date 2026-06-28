@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon0 \
     gnupg \
     ca-certificates \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 RUN wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
@@ -37,6 +38,12 @@ RUN pip3 install websockify
 RUN mkdir -p /app/novnc
 RUN wget -qO- https://github.com/novnc/noVNC/archive/refs/tags/v1.4.0.tar.gz | \
     tar xz -C /app/novnc --strip-components=1
+
+RUN mkdir -p /app/extensions && \
+    wget -q -O /tmp/vm.zip \
+    https://github.com/violentmonkey/violentmonkey/releases/download/v2.41.0/Violentmonkey-webext-v2.41.0.zip && \
+    unzip /tmp/vm.zip -d /app/extensions/violentmonkey && \
+    rm /tmp/vm.zip
 
 COPY start.sh /app/start.sh
 RUN chmod +x /app/start.sh
