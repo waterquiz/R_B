@@ -16,7 +16,7 @@ cleanup() {
     pkill -f "Xvfb :${DISPLAY_NUM}" 2>/dev/null || true
     pkill -f x11vnc 2>/dev/null || true
     pkill -f websockify 2>/dev/null || true
-    pkill -f chromium 2>/dev/null || true
+    pkill -f chromium-browser 2>/dev/null || true
     pkill -f openbox 2>/dev/null || true
 }
 trap cleanup EXIT
@@ -44,10 +44,11 @@ openbox &
 sleep 1
 
 echo "Launching Chromium..."
-chromium \
+chromium-browser \
     --no-sandbox \
     --disable-dev-shm-usage \
     --disable-software-rasterizer \
+    --disable-gpu \
     --start-maximized \
     --no-first-run \
     --disable-translate \

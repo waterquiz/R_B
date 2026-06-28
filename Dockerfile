@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     x11vnc \
     chromium-browser \
     openbox \
+    menu \
     python3 \
     python3-pip \
     wget \
@@ -17,7 +18,11 @@ RUN apt-get update && apt-get install -y \
     tar \
     xdotool \
     x11-utils \
-    && rm -rf /var/lib/apt/lists/*
+    libegl1 \
+    libgl1 \
+    libxkbcommon0 \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -sf /usr/bin/chromium-browser /usr/bin/chromium
 
 RUN pip3 install websockify
 
