@@ -1,0 +1,3 @@
+novnc/
+*.log
+__pycache__/
