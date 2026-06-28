@@ -16,7 +16,8 @@ cleanup() {
     pkill -f "Xvfb :${DISPLAY_NUM}" 2>/dev/null || true
     pkill -f x11vnc 2>/dev/null || true
     pkill -f websockify 2>/dev/null || true
-    pkill -f chromium-browser 2>/dev/null || true
+    pkill -f "google-chrome" 2>/dev/null || true
+    pkill -f "chromium-browser" 2>/dev/null || true
     pkill -f openbox 2>/dev/null || true
 }
 trap cleanup EXIT
@@ -55,8 +56,11 @@ chromium-browser \
     --disable-notifications \
     --disable-default-apps \
     --window-size=1280,720 \
+    --window-position=0,0 \
+    --test-type \
+    --noerrdialogs \
     https://www.google.com &
-sleep 3
+sleep 5
 
 echo "Starting x11vnc..."
 if [ -n "$VNC_PASSWORD" ]; then
